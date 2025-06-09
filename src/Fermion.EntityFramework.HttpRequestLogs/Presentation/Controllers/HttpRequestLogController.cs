@@ -1,5 +1,7 @@
 using Fermion.EntityFramework.HttpRequestLogs.Application.DTOs.HttpRequestLogs;
 using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces;
+using Fermion.EntityFramework.Shared.DTOs.Pagination;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fermion.EntityFramework.HttpRequestLogs.Presentation.Controllers;
@@ -11,6 +13,8 @@ public class HttpRequestLogController(
     : ControllerBase
 {
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(HttpRequestLogResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var result = await httpRequestLogAppService.GetByIdAsync(id, cancellationToken);
@@ -18,6 +22,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("pageable")]
+    [ProducesResponseType(typeof(PageableResponseDto<HttpRequestLogResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetPageableAndFilterAsync(
         [FromQuery] GetListHttpRequestLogRequestDto request,
         CancellationToken cancellationToken = default)
@@ -27,6 +32,7 @@ public class HttpRequestLogController(
     }
 
     [HttpDelete("cleanup")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<ActionResult> CleanupOldHttpRequestLogsAsync(
         [FromQuery] DateTime olderThan,
         CancellationToken cancellationToken = default)
@@ -36,6 +42,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("response-time-stats")]
+    [ProducesResponseType(typeof(ResponseTimeStatsResponseDto), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetResponseTimeStatsAsync(
         [FromQuery] ResponseTimeStatsRequestDto request,
         CancellationToken cancellationToken = default)
@@ -45,6 +52,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("slowest-endpoints")]
+    [ProducesResponseType(typeof(List<EndpointPerformanceResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetSlowestEndpointsAsync(
         [FromQuery] EndpointPerformanceRequestDto request,
         CancellationToken cancellationToken = default)
@@ -54,6 +62,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("most-frequent-endpoints")]
+    [ProducesResponseType(typeof(List<EndpointUsageResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetMostFrequentEndpointsAsync(
         [FromQuery] EndpointUsageRequestDto request,
         CancellationToken cancellationToken = default)
@@ -63,6 +72,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("status-code-distribution")]
+    [ProducesResponseType(typeof(List<StatusCodeDistributionResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetStatusCodeDistributionAsync(
         [FromQuery] StatusCodeDistributionRequestDto request,
         CancellationToken cancellationToken = default)
@@ -72,6 +82,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("request-rate")]
+    [ProducesResponseType(typeof(List<DefaultRateOverTimeResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetRequestRateOverTimeAsync(
         [FromQuery] RateOverTimeRequestDto request,
         CancellationToken cancellationToken = default)
@@ -81,6 +92,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("error-rate")]
+    [ProducesResponseType(typeof(List<ErrorRateOverTimeResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetErrorRateOverTimeAsync(
         [FromQuery] RateOverTimeRequestDto request,
         CancellationToken cancellationToken = default)
@@ -90,6 +102,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("client-usage-stats")]
+    [ProducesResponseType(typeof(ClientUsageStatsResponseDto), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetClientUsageStatsAsync(
         [FromQuery] DateRangeRequestDto request,
         CancellationToken cancellationToken = default)
@@ -99,6 +112,7 @@ public class HttpRequestLogController(
     }
 
     [HttpGet("count")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<ActionResult> GetTotalLogCountAsync(
         [FromQuery] DateRangeRequestDto request,
         CancellationToken cancellationToken = default)

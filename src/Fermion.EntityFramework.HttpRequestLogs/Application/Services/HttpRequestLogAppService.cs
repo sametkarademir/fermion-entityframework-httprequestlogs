@@ -49,9 +49,9 @@ public class HttpRequestLogAppService(
         queryable = queryable.WhereIf(request.SnapshotId.HasValue, item => item.SnapshotId == request.SnapshotId);
         queryable = queryable.WhereIf(request.SessionId.HasValue, item => item.SessionId == request.SessionId);
         queryable = queryable.WhereIf(request.CorrelationId.HasValue, item => item.CorrelationId == request.CorrelationId);
-        queryable = queryable.ApplySort(request.Field, request.Order, cancellationToken);
 
         queryable = queryable.AsNoTracking();
+        queryable = queryable.ApplySort(request.Field, request.Order, cancellationToken);
         var result = await queryable.ToPageableAsync(request.Page, request.PerPage, cancellationToken: cancellationToken);
         var mappedHttpRequestLogs = mapper.Map<List<HttpRequestLogResponseDto>>(result.Data);
 
