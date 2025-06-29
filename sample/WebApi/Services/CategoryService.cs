@@ -40,7 +40,7 @@ public class CategoryService(
             Name = request.Name,
             Description = request.Description
         };
-        var createdCategory = await categoryRepository.AddAsync(category);
+        var createdCategory = await categoryRepository.AddAsync(category, cancellationToken: cancellationToken);
         await categoryRepository.SaveChangesAsync(cancellationToken);
 
         return mapper.Map<CategoryResponseDto>(createdCategory);
@@ -53,7 +53,7 @@ public class CategoryService(
         category.Name = request.Name;
         category.Description = request.Description;
 
-        var updatedCategory = await categoryRepository.UpdateAsync(category);
+        var updatedCategory = await categoryRepository.UpdateAsync(category, cancellationToken: cancellationToken);
         await categoryRepository.SaveChangesAsync(cancellationToken);
 
         return mapper.Map<CategoryResponseDto>(updatedCategory);
@@ -63,7 +63,7 @@ public class CategoryService(
     {
         var category = await categoryRepository.GetAsync(item => item.Id == id, cancellationToken: cancellationToken);
 
-        await categoryRepository.DeleteAsync(category);
+        await categoryRepository.DeleteAsync(category, cancellationToken: cancellationToken);
         await categoryRepository.SaveChangesAsync(cancellationToken);
     }
 }

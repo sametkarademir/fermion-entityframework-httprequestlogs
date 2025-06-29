@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Fermion.EntityFramework.HttpRequestLogs.Core.Entities;
-using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces;
+using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Repositories;
 using Fermion.EntityFramework.HttpRequestLogs.Core.Options;
 using Fermion.Extensions.Claims;
 using Fermion.Extensions.HttpContexts;

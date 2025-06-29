@@ -20,7 +20,7 @@ Fermion.EntityFramework.HttpRequestLogs is a comprehensive HTTP request logging 
 ## Installation
 
 ```bash
-dotnet add package Fermion.EntityFramework.HttpRequestLogs
+  dotnet add package Fermion.EntityFramework.HttpRequestLogs
 ```
 
 ## Project Structure

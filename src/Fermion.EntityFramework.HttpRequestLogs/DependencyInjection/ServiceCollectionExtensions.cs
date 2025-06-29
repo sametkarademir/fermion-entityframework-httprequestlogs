@@ -1,7 +1,8 @@
 using System.Reflection;
 using Fermion.Domain.Shared.Conventions;
 using Fermion.EntityFramework.HttpRequestLogs.Application.Services;
-using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces;
+using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Repositories;
+using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Services;
 using Fermion.EntityFramework.HttpRequestLogs.Core.Options;
 using Fermion.EntityFramework.HttpRequestLogs.Infrastructure.Repositories;
 using Fermion.EntityFramework.HttpRequestLogs.Presentation.Controllers;

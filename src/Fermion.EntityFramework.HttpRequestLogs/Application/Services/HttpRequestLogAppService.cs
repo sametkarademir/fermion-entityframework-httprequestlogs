@@ -2,7 +2,8 @@ using System.Text;
 using AutoMapper;
 using Fermion.EntityFramework.HttpRequestLogs.Application.DTOs.HttpRequestLogs;
 using Fermion.EntityFramework.HttpRequestLogs.Core.Enums;
-using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces;
+using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Repositories;
+using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Services;
 using Fermion.EntityFramework.Shared.DTOs.Pagination;
 using Fermion.EntityFramework.Shared.Extensions;
 using Fermion.Extensions.Linq;
@@ -30,7 +31,7 @@ public class HttpRequestLogAppService(
 
     public async Task<PageableResponseDto<HttpRequestLogResponseDto>> GetPageableAndFilterAsync(GetListHttpRequestLogRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(request.ClientIp), item => item.ClientIp == request.ClientIp);
         queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(request.ControllerName), item => item.ControllerName == request.ControllerName);
         queryable = queryable.WhereIf(!string.IsNullOrWhiteSpace(request.ActionName), item => item.ActionName == request.ActionName);
@@ -60,7 +61,7 @@ public class HttpRequestLogAppService(
 
     public async Task<int> CleanupOldHttpRequestLogsAsync(DateTime olderThan, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(x => x.CreationTime < olderThan);
         var countToDelete = await queryable.CountAsync(cancellationToken: cancellationToken);
         if (countToDelete == 0)
@@ -107,7 +108,7 @@ public class HttpRequestLogAppService(
                 if (cancellationToken.IsCancellationRequested)
                 {
                     logger.LogInformation(
-                        "[CleanupOldAuditLogsAsync] [Action=DeleteRangeAsync()] [Cancelled] [TotalDeleted={TotalDeleted}]",
+                        "[CleanupOldHttpRequestLogsAsync] [Action=DeleteRangeAsync()] [Cancelled] [TotalDeleted={TotalDeleted}]",
                         totalDeleted
                     );
 
@@ -136,7 +137,7 @@ public class HttpRequestLogAppService(
 
     public async Task<ResponseTimeStatsResponseDto> GetResponseTimeStatsAsync(ResponseTimeStatsRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestPath == request.Path);
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
@@ -188,7 +189,7 @@ public class HttpRequestLogAppService(
 
     public async Task<List<EndpointPerformanceResponseDto>> GetSlowestEndpointsAsync(EndpointPerformanceRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
         queryable = queryable.Where(item => item.DurationMs.HasValue);
@@ -231,7 +232,7 @@ public class HttpRequestLogAppService(
 
     public async Task<List<EndpointUsageResponseDto>> GetMostFrequentEndpointsAsync(EndpointUsageRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
         queryable = queryable.AsNoTracking();
@@ -269,7 +270,7 @@ public class HttpRequestLogAppService(
 
     public async Task<List<StatusCodeDistributionResponseDto>> GetStatusCodeDistributionAsync(StatusCodeDistributionRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
         queryable = queryable.Where(item => item.StatusCode.HasValue);
@@ -300,7 +301,7 @@ public class HttpRequestLogAppService(
 
     public async Task<List<DefaultRateOverTimeResponseDto>> GetRequestRateOverTimeAsync(RateOverTimeRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
         queryable = queryable.AsNoTracking();
@@ -368,7 +369,7 @@ public class HttpRequestLogAppService(
 
     public async Task<List<ErrorRateOverTimeResponseDto>> GetErrorRateOverTimeAsync(RateOverTimeRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
         queryable = queryable.AsNoTracking();
@@ -439,7 +440,7 @@ public class HttpRequestLogAppService(
 
     public async Task<ClientUsageStatsResponseDto> GetClientUsageStatsAsync(DateRangeRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
         queryable = queryable.AsNoTracking();
@@ -551,7 +552,7 @@ public class HttpRequestLogAppService(
 
     public async Task<string> ExportLogsToCsvAsync(DateRangeRequestDto request, CancellationToken cancellationToken = default)
     {
-        var queryable = httpRequestLogRepository.Query();
+        var queryable = httpRequestLogRepository.GetQueryable();
         queryable = queryable.Where(item => item.RequestTime.Date >= request.StartDate.Date);
         queryable = queryable.Where(item => item.RequestTime.Date <= request.EndDate.Date);
         queryable = queryable.AsNoTracking();

@@ -1,5 +1,5 @@
 using Fermion.EntityFramework.HttpRequestLogs.Core.Entities;
-using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces;
+using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Repositories;
 using Fermion.EntityFramework.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 

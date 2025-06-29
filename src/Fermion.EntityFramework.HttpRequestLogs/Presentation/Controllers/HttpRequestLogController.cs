@@ -1,5 +1,6 @@
 using Fermion.EntityFramework.HttpRequestLogs.Application.DTOs.HttpRequestLogs;
 using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces;
+using Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Services;
 using Fermion.EntityFramework.Shared.DTOs.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

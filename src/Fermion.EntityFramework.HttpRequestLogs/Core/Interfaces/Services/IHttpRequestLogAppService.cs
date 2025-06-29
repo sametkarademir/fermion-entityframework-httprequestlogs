@@ -1,7 +1,7 @@
 using Fermion.EntityFramework.HttpRequestLogs.Application.DTOs.HttpRequestLogs;
 using Fermion.EntityFramework.Shared.DTOs.Pagination;
 
-namespace Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces;
+namespace Fermion.EntityFramework.HttpRequestLogs.Core.Interfaces.Services;
 
 public interface IHttpRequestLogAppService
 {
